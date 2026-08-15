@@ -818,10 +818,8 @@ async function updateNowPlaying() {
             totalTime.textContent =
                 "0:00";
 
-
-            image.removeAttribute(
-                "src"
-            );
+            
+            image.src = "assets/icon-512.png";
 
 
             currentTrackId =
