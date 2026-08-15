@@ -1,184 +1,384 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="theme-color" content="#121212">
-    <meta name="description" content="Seu resumo musical diário do Spotify">
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#121212"
+    >
+
+    <meta
+        name="description"
+        content="Seu resumo musical diário do Spotify"
+    >
 
     <title>Spotday</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
     <link
-    rel="apple-touch-icon"
-    href="assets/icon-192.png"
->
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="manifest"
+        href="manifest.json"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="assets/icon-192.png"
+    >
+
 </head>
+
 
 <body>
 
-    <main class="app">
 
-        <section id="login-screen" class="screen">
+<main class="app">
 
-            <div class="logo">
-                <span>spot</span><strong>day</strong>
+
+    <!-- ================================= -->
+    <!-- LOGIN -->
+    <!-- ================================= -->
+
+    <section
+        id="login-screen"
+        class="screen"
+    >
+
+        <div class="logo">
+            <span>spot</span><strong>day</strong>
+        </div>
+
+        <p class="subtitle">
+            Seu dia em músicas.
+        </p>
+
+        <button
+            id="login-button"
+            class="spotify-button"
+        >
+            Conectar ao Spotify
+        </button>
+
+    </section>
+
+
+
+    <!-- ================================= -->
+    <!-- DASHBOARD -->
+    <!-- ================================= -->
+
+    <section
+        id="dashboard"
+        class="screen hidden"
+    >
+
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div>
+
+                <p class="eyebrow">
+                    RESUMO DE HOJE
+                </p>
+
+                <h1>
+                    Seu Spotday
+                </h1>
+
             </div>
 
-            <p class="subtitle">
-                Seu dia em músicas.
+
+            <button
+                id="logout-button"
+                class="logout"
+            >
+                Sair
+            </button>
+
+        </header>
+
+
+
+        <!-- ================================= -->
+        <!-- TOCANDO AGORA -->
+        <!-- ================================= -->
+
+        <section
+            class="now-playing-card"
+            id="now-playing"
+        >
+
+            <div class="now-playing-header">
+
+                <span class="eyebrow">
+                    TOCANDO AGORA
+                </span>
+
+                <span
+                    id="playing-status"
+                    class="playing-status"
+                >
+                    ● AO VIVO
+                </span>
+
+            </div>
+
+
+            <div class="now-playing-content">
+
+                <img
+                    id="now-playing-image"
+                    src=""
+                    alt="Capa do álbum"
+                >
+
+
+                <div class="now-playing-info">
+
+                    <h2 id="now-playing-name">
+                        Nada tocando
+                    </h2>
+
+                    <p id="now-playing-artist">
+                        Abra o Spotify para começar
+                    </p>
+
+
+                    <div class="progress-container">
+
+                        <div
+                            id="now-playing-progress"
+                            class="progress-bar"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="time-row">
+
+                        <span id="current-time">
+                            0:00
+                        </span>
+
+                        <span id="total-time">
+                            0:00
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- ESTATÍSTICAS -->
+        <!-- ================================= -->
+
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <span class="stat-icon">
+                    🎵
+                </span>
+
+                <span
+                    id="tracks-count"
+                    class="stat-number"
+                >
+                    0
+                </span>
+
+                <span class="stat-label">
+                    músicas
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-icon">
+                    🎤
+                </span>
+
+                <span
+                    id="artists-count"
+                    class="stat-number"
+                >
+                    0
+                </span>
+
+                <span class="stat-label">
+                    artistas
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-icon">
+                    ⏱️
+                </span>
+
+                <span
+                    id="minutes-count"
+                    class="stat-number"
+                >
+                    0
+                </span>
+
+                <span class="stat-label">
+                    minutos
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- MAIS OUVIDA -->
+        <!-- ================================= -->
+
+        <section class="favorite-card">
+
+            <p class="eyebrow">
+                MAIS OUVIDA
             </p>
 
-            <button id="login-button" class="spotify-button">
-                Conectar ao Spotify
+
+            <div class="favorite-content">
+
+                <img
+                    id="top-track-image"
+                    src=""
+                    alt="Capa do álbum"
+                >
+
+
+                <div>
+
+                    <h2 id="top-track-name">
+                        Nenhuma música
+                    </h2>
+
+                    <p id="top-track-artist">
+                        —
+                    </p>
+
+                    <span id="top-track-count">
+                        0 reproduções
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- CÁPSULA DO TEMPO -->
+        <!-- ================================= -->
+
+        <section class="capsule-entry">
+
+            <button
+                id="capsule-button"
+                class="capsule-button"
+            >
+
+                <span class="capsule-symbol">
+                    ✦
+                </span>
+
+                <span class="capsule-text">
+
+                    <strong>
+                        Cápsula do Tempo
+                    </strong>
+
+                    <small>
+                        Seus dias em músicas
+                    </small>
+
+                </span>
+
+                <span class="capsule-arrow">
+                    →
+                </span>
+
             </button>
 
         </section>
 
 
-        <section id="dashboard" class="screen hidden">
 
-            <header class="header">
-                <div>
-                    <p class="eyebrow">RESUMO DE HOJE</p>
-                    <h1>Seu Spotday</h1>
-                </div>
+        <!-- ================================= -->
+        <!-- HISTÓRICO -->
+        <!-- ================================= -->
 
-                <button id="logout-button" class="logout">
-                    Sair
-                </button>
-            </header>
+        <section class="history-section">
 
-<section class="now-playing-card" id="now-playing">
+            <div class="section-title">
 
-    <div class="now-playing-header">
-        <span class="eyebrow">TOCANDO AGORA</span>
+                <h2>
+                    Hoje
+                </h2>
 
-        <span id="playing-status" class="playing-status">
-            ● AO VIVO
-        </span>
-    </div>
-
-    <div class="now-playing-content">
-
-        <img
-            id="now-playing-image"
-            src=""
-            alt="Capa do álbum"
-        >
-
-        <div class="now-playing-info">
-
-            <h2 id="now-playing-name">
-                Nada tocando
-            </h2>
-
-            <p id="now-playing-artist">
-                Abra o Spotify para começar
-            </p>
-
-            <div class="progress-container">
-
-                <div
-                    id="now-playing-progress"
-                    class="progress-bar"
-                ></div>
+                <span id="history-count">
+                    0
+                </span>
 
             </div>
 
-            <div class="time-row">
-                <span id="current-time">0:00</span>
-                <span id="total-time">0:00</span>
-            </div>
 
-        </div>
-
-    </div>
-
-</section>
-
-
-            <section class="stats">
-
-                <div class="stat-card">
-                    <span class="stat-icon">🎵</span>
-                    <span id="tracks-count" class="stat-number">0</span>
-                    <span class="stat-label">músicas</span>
-                </div>
-
-                <div class="stat-card">
-                    <span class="stat-icon">🎤</span>
-                    <span id="artists-count" class="stat-number">0</span>
-                    <span class="stat-label">artistas</span>
-                </div>
-
-                <div class="stat-card">
-                    <span class="stat-icon">⏱️</span>
-                    <span id="minutes-count" class="stat-number">0</span>
-                    <span class="stat-label">minutos</span>
-                </div>
-
-            </section>
-
-
-            <section class="favorite-card">
-
-                <p class="eyebrow">MAIS OUVIDA</p>
-
-                <div class="favorite-content">
-
-                    <img
-                        id="top-track-image"
-                        src=""
-                        alt="Capa do álbum"
-                    >
-
-                    <div>
-                        <h2 id="top-track-name">
-                            Nenhuma música
-                        </h2>
-
-                        <p id="top-track-artist">
-                            —
-                        </p>
-
-                        <span id="top-track-count">
-                            0 reproduções
-                        </span>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <section class="history-section">
-
-                <div class="section-title">
-                    <h2>Hoje</h2>
-                    <span id="history-count">0</span>
-                </div>
-
-                <div id="history-list" class="history-list"></div>
-
-            </section>
+            <div
+                id="history-list"
+                class="history-list"
+            ></div>
 
         </section>
 
-    </main>
 
-<button
-    id="capsule-button"
-    class="capsule-button"
->
-    ✦ Cápsula do Tempo
-</button>
-    
-    <script src="auth.js"></script>
-    <script src="spotify.js"></script>
-    <script src="app.js"></script>
+    </section>
+
+</main>
+
+
+
+<!-- ================================= -->
+<!-- SCRIPTS -->
+<!-- ================================= -->
+
+<script src="auth.js"></script>
+
+<script src="spotify.js"></script>
+
+<script src="app.js"></script>
+
 
 </body>
 </html>
