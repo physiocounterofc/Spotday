@@ -1,3 +1,8 @@
+// ==========================================
+// SPOTDAY - APLICAÇÃO PRINCIPAL
+// ==========================================
+
+
 document.addEventListener(
     "DOMContentLoaded",
     async () => {
@@ -14,17 +19,33 @@ document.addEventListener(
             );
 
 
-        loginButton.addEventListener(
-            "click",
-            loginWithSpotify
-        );
+        // ==================================
+        // BOTÕES
+        // ==================================
+
+        if (loginButton) {
+
+            loginButton.addEventListener(
+                "click",
+                loginWithSpotify
+            );
+
+        }
 
 
-        logoutButton.addEventListener(
-            "click",
-            logout
-        );
+        if (logoutButton) {
 
+            logoutButton.addEventListener(
+                "click",
+                logout
+            );
+
+        }
+
+
+        // ==================================
+        // AUTENTICAÇÃO
+        // ==================================
 
         try {
 
@@ -41,6 +62,12 @@ document.addEventListener(
 
                 await loadDashboard();
 
+                // ==================================
+                // 🎵 INICIAR TOCANDO AGORA
+                // ==================================
+
+                startNowPlaying();
+
             }
 
         } catch (error) {
@@ -56,91 +83,141 @@ document.addEventListener(
 );
 
 
-/* ==============================
-   TELAS
-============================== */
+// ==========================================
+// TELAS
+// ==========================================
 
 function showDashboard() {
 
-    document
-        .getElementById("login-screen")
-        .classList.add("hidden");
+    const loginScreen =
+        document.getElementById(
+            "login-screen"
+        );
 
 
-    document
-        .getElementById("dashboard")
-        .classList.remove("hidden");
+    const dashboard =
+        document.getElementById(
+            "dashboard"
+        );
+
+
+    if (loginScreen) {
+
+        loginScreen.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    if (dashboard) {
+
+        dashboard.classList.remove(
+            "hidden"
+        );
+
+    }
+
 }
 
 
-/* ==============================
-   DASHBOARD
-============================== */
+// ==========================================
+// DASHBOARD
+// ==========================================
 
 async function loadDashboard() {
 
-    const data =
-        await getRecentlyPlayed();
+    try {
+
+        const data =
+            await getRecentlyPlayed();
 
 
-    const tracks =
-        data.items || [];
+        const tracks =
+            data.items || [];
 
 
-    const today =
-        getTodayTracks(tracks);
+        const today =
+            getTodayTracks(
+                tracks
+            );
 
 
-    updateStatistics(today);
+        updateStatistics(
+            today
+        );
 
-    updateTopTrack(today);
 
-    updateHistory(today);
+        updateTopTrack(
+            today
+        );
+
+
+        updateHistory(
+            today
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao carregar dashboard:",
+            error
+        );
+
+    }
+
 }
 
 
-/* ==============================
-   PEGAR MÚSICAS DE HOJE
-============================== */
+// ==========================================
+// PEGAR MÚSICAS DE HOJE
+// ==========================================
 
-function getTodayTracks(tracks) {
+function getTodayTracks(
+    tracks
+) {
 
     const now =
         new Date();
 
 
-    return tracks.filter(item => {
+    return tracks.filter(
+        item => {
 
-        const playedAt =
-            new Date(
-                item.played_at
+            const playedAt =
+                new Date(
+                    item.played_at
+                );
+
+
+            return (
+                playedAt.getFullYear()
+                === now.getFullYear()
+
+                &&
+
+                playedAt.getMonth()
+                === now.getMonth()
+
+                &&
+
+                playedAt.getDate()
+                === now.getDate()
             );
 
+        }
+    );
 
-        return (
-            playedAt.getFullYear()
-            === now.getFullYear()
-
-            &&
-
-            playedAt.getMonth()
-            === now.getMonth()
-
-            &&
-
-            playedAt.getDate()
-            === now.getDate()
-        );
-
-    });
 }
 
 
-/* ==============================
-   ESTATÍSTICAS
-============================== */
+// ==========================================
+// ESTATÍSTICAS
+// ==========================================
 
-function updateStatistics(tracks) {
+function updateStatistics(
+    tracks
+) {
 
     const tracksCount =
         tracks.length;
@@ -148,20 +225,28 @@ function updateStatistics(tracks) {
 
     const artists =
         new Set(
-            tracks.map(
-                item =>
-                    item.track.artists[0]?.id
-            )
+            tracks
+                .map(
+                    item =>
+                        item.track
+                            ?.artists?.[0]
+                            ?.id
+                )
+                .filter(Boolean)
         );
 
 
     const minutes =
         tracks.reduce(
-            (total, item) => {
+            (
+                total,
+                item
+            ) => {
 
                 return total +
                     (
-                        item.track.duration_ms
+                        item.track
+                            ?.duration_ms
                         || 0
                     );
 
@@ -170,32 +255,103 @@ function updateStatistics(tracks) {
         ) / 60000;
 
 
-    document.getElementById(
-        "tracks-count"
-    ).textContent =
-        tracksCount;
+    const tracksElement =
+        document.getElementById(
+            "tracks-count"
+        );
 
 
-    document.getElementById(
-        "artists-count"
-    ).textContent =
-        artists.size;
+    const artistsElement =
+        document.getElementById(
+            "artists-count"
+        );
 
 
-    document.getElementById(
-        "minutes-count"
-    ).textContent =
-        Math.round(minutes);
+    const minutesElement =
+        document.getElementById(
+            "minutes-count"
+        );
+
+
+    if (tracksElement) {
+
+        tracksElement.textContent =
+            tracksCount;
+
+    }
+
+
+    if (artistsElement) {
+
+        artistsElement.textContent =
+            artists.size;
+
+    }
+
+
+    if (minutesElement) {
+
+        minutesElement.textContent =
+            Math.round(
+                minutes
+            );
+
+    }
+
 }
 
 
-/* ==============================
-   MAIS OUVIDA
-============================== */
+// ==========================================
+// MAIS OUVIDA
+// ==========================================
 
-function updateTopTrack(tracks) {
+function updateTopTrack(
+    tracks
+) {
 
     if (!tracks.length) {
+
+        const name =
+            document.getElementById(
+                "top-track-name"
+            );
+
+
+        const artist =
+            document.getElementById(
+                "top-track-artist"
+            );
+
+
+        const count =
+            document.getElementById(
+                "top-track-count"
+            );
+
+
+        if (name) {
+
+            name.textContent =
+                "Nenhuma música";
+
+        }
+
+
+        if (artist) {
+
+            artist.textContent =
+                "—";
+
+        }
+
+
+        if (count) {
+
+            count.textContent =
+                "0 reproduções";
+
+        }
+
 
         return;
     }
@@ -204,82 +360,144 @@ function updateTopTrack(tracks) {
     const count = {};
 
 
-    tracks.forEach(item => {
+    tracks.forEach(
+        item => {
 
-        const track =
-            item.track;
-
-
-        const id =
-            track.id;
+            const track =
+                item.track;
 
 
-        if (!count[id]) {
+            if (!track) {
+                return;
+            }
 
-            count[id] = {
-                track: track,
-                plays: 0
-            };
+
+            const id =
+                track.id;
+
+
+            if (!count[id]) {
+
+                count[id] = {
+
+                    track:
+                        track,
+
+                    plays:
+                        0
+
+                };
+
+            }
+
+
+            count[id].plays++;
 
         }
-
-
-        count[id].plays++;
-
-    });
+    );
 
 
     const top =
-        Object.values(count)
+        Object.values(
+            count
+        )
             .sort(
-                (a, b) =>
-                    b.plays - a.plays
+                (
+                    a,
+                    b
+                ) =>
+                    b.plays -
+                    a.plays
             )[0];
+
+
+    if (!top) {
+        return;
+    }
 
 
     const track =
         top.track;
 
 
-    document.getElementById(
-        "top-track-image"
-    ).src =
-        track.album.images[0]?.url || "";
+    const image =
+        document.getElementById(
+            "top-track-image"
+        );
 
 
-    document.getElementById(
-        "top-track-name"
-    ).textContent =
-        track.name;
+    const name =
+        document.getElementById(
+            "top-track-name"
+        );
 
 
-    document.getElementById(
-        "top-track-artist"
-    ).textContent =
-        track.artists
-            .map(
-                artist =>
-                    artist.name
-            )
-            .join(", ");
+    const artist =
+        document.getElementById(
+            "top-track-artist"
+        );
 
 
-    document.getElementById(
-        "top-track-count"
-    ).textContent =
-        `${top.plays} ${
-            top.plays === 1
-                ? "reprodução"
-                : "reproduções"
-        }`;
+    const plays =
+        document.getElementById(
+            "top-track-count"
+        );
+
+
+    if (image) {
+
+        image.src =
+            track.album
+                ?.images?.[0]
+                ?.url
+            || "";
+
+    }
+
+
+    if (name) {
+
+        name.textContent =
+            track.name;
+
+    }
+
+
+    if (artist) {
+
+        artist.textContent =
+            track.artists
+                ?.map(
+                    artist =>
+                        artist.name
+                )
+                .join(", ")
+            || "—";
+
+    }
+
+
+    if (plays) {
+
+        plays.textContent =
+            `${top.plays} ${
+                top.plays === 1
+                    ? "reprodução"
+                    : "reproduções"
+            }`;
+
+    }
+
 }
 
 
-/* ==============================
-   HISTÓRICO
-============================== */
+// ==========================================
+// HISTÓRICO
+// ==========================================
 
-function updateHistory(tracks) {
+function updateHistory(
+    tracks
+) {
 
     const container =
         document.getElementById(
@@ -293,97 +511,131 @@ function updateHistory(tracks) {
         );
 
 
-    count.textContent =
-        tracks.length;
+    if (!container) {
+        return;
+    }
 
 
-    container.innerHTML = "";
+    if (count) {
+
+        count.textContent =
+            tracks.length;
+
+    }
 
 
-    tracks.forEach(item => {
-
-        const track =
-            item.track;
+    container.innerHTML =
+        "";
 
 
-        const date =
-            new Date(
-                item.played_at
+    tracks.forEach(
+        item => {
+
+            const track =
+                item.track;
+
+
+            if (!track) {
+                return;
+            }
+
+
+            const date =
+                new Date(
+                    item.played_at
+                );
+
+
+            const time =
+                date.toLocaleTimeString(
+                    "pt-BR",
+                    {
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit"
+                    }
+                );
+
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "history-item";
+
+
+            element.innerHTML = `
+
+                <img
+                    src="${
+                        track.album
+                            ?.images?.[2]
+                            ?.url
+
+                        ||
+
+                        track.album
+                            ?.images?.[0]
+                            ?.url
+
+                        ||
+
+                        ""
+                    }"
+                    alt=""
+                >
+
+                <div class="history-info">
+
+                    <strong>
+                        ${escapeHTML(
+                            track.name
+                        )}
+                    </strong>
+
+                    <span>
+                        ${escapeHTML(
+                            track.artists
+                                ?.map(
+                                    artist =>
+                                        artist.name
+                                )
+                                .join(", ")
+                            || ""
+                        )}
+                    </span>
+
+                </div>
+
+                <time>
+                    ${time}
+                </time>
+
+            `;
+
+
+            container.appendChild(
+                element
             );
 
+        }
+    );
 
-        const time =
-            date.toLocaleTimeString(
-                "pt-BR",
-                {
-                    hour: "2-digit",
-                    minute: "2-digit"
-                }
-            );
-
-
-        const element =
-            document.createElement(
-                "div"
-            );
-
-
-        element.className =
-            "history-item";
-
-
-        element.innerHTML = `
-
-            <img
-                src="${
-                    track.album.images[2]?.url
-                    ||
-                    track.album.images[0]?.url
-                    ||
-                    ""
-                }"
-                alt=""
-            >
-
-            <div class="history-info">
-
-                <strong>
-                    ${escapeHTML(track.name)}
-                </strong>
-
-                <span>
-                    ${escapeHTML(
-                        track.artists
-                            .map(
-                                artist =>
-                                    artist.name
-                            )
-                            .join(", ")
-                    )}
-                </span>
-
-            </div>
-
-            <time>
-                ${time}
-            </time>
-
-        `;
-
-
-        container.appendChild(
-            element
-        );
-
-    });
 }
 
 
-/* ==============================
-   SEGURANÇA
-============================== */
+// ==========================================
+// SEGURANÇA
+// ==========================================
 
-function escapeHTML(text) {
+function escapeHTML(
+    text
+) {
 
     const div =
         document.createElement(
@@ -396,294 +648,461 @@ function escapeHTML(text) {
 
 
     return div.innerHTML;
+
 }
 
-if ("serviceWorker" in navigator) {
-    
+
+// ==========================================
+// SERVICE WORKER
+// ==========================================
+
+if (
+    "serviceWorker"
+    in navigator
+) {
+
     window.addEventListener(
         "load",
         () => {
-            
+
             navigator.serviceWorker.register(
                 "./sw.js"
-            );
-            
+            )
+                .catch(
+                    error => {
+
+                        console.error(
+                            "Erro no Service Worker:",
+                            error
+                        );
+
+                    }
+                );
+
         }
     );
-    
+
 }
 
-/* ==============================
-   NOW PLAYING
-============================== */
 
-let nowPlayingTimer = null;
-let currentTrackId = null;
-let currentProgress = 0;
-let currentDuration = 0;
+// ==========================================
+// 🎵 NOW PLAYING
+// ==========================================
 
+let nowPlayingTimer =
+    null;
+
+
+let currentTrackId =
+    null;
+
+
+let currentProgress =
+    0;
+
+
+let currentDuration =
+    0;
+
+
+// ==========================================
+// ATUALIZAR MÚSICA ATUAL
+// ==========================================
 
 async function updateNowPlaying() {
-    
+
     try {
-        
+
         const data =
             await getCurrentlyPlaying();
-        
-        
+
+
         const image =
             document.getElementById(
                 "now-playing-image"
             );
-        
+
+
         const name =
             document.getElementById(
                 "now-playing-name"
             );
-        
+
+
         const artist =
             document.getElementById(
                 "now-playing-artist"
             );
-        
+
+
         const status =
             document.getElementById(
                 "playing-status"
             );
-        
+
+
         const progress =
             document.getElementById(
                 "now-playing-progress"
             );
-        
+
+
         const currentTime =
             document.getElementById(
                 "current-time"
             );
-        
+
+
         const totalTime =
             document.getElementById(
                 "total-time"
             );
-        
-        
-        /* ==========================
-           NADA TOCANDO
-        ========================== */
-        
+
+
+        // ==================================
+        // ELEMENTOS NÃO EXISTEM
+        // ==================================
+
+        if (
+            !image ||
+            !name ||
+            !artist ||
+            !status ||
+            !progress ||
+            !currentTime ||
+            !totalTime
+        ) {
+
+            console.error(
+                "Elementos do Now Playing não encontrados."
+            );
+
+            return;
+
+        }
+
+
+        // ==================================
+        // NADA TOCANDO
+        // ==================================
+
         if (
             !data ||
-            !data.item ||
-            data.item.type !== "track"
+            !data.item
         ) {
-            
+
             name.textContent =
                 "Nada tocando";
-            
+
+
             artist.textContent =
                 "Abra o Spotify para começar";
-            
+
+
             status.textContent =
                 "● PARADO";
-            
+
+
             status.style.color =
                 "#888";
-            
+
+
             progress.style.width =
                 "0%";
-            
+
+
             currentTime.textContent =
                 "0:00";
-            
+
+
             totalTime.textContent =
                 "0:00";
-            
-            image.removeAttribute("src");
-            
-            currentTrackId = null;
-            
+
+
+            image.removeAttribute(
+                "src"
+            );
+
+
+            currentTrackId =
+                null;
+
+
+            currentProgress =
+                0;
+
+
+            currentDuration =
+                0;
+
+
             return;
+
         }
-        
-        
+
+
+        // ==================================
+        // VERIFICAR SE É UMA MÚSICA
+        // ==================================
+
         const track =
             data.item;
-        
-        
-        /* ==========================
-           DADOS DA MÚSICA
-        ========================== */
-        
+
+
+        if (
+            track.type !== "track"
+        ) {
+
+            name.textContent =
+                "Conteúdo não suportado";
+
+
+            artist.textContent =
+                "O Spotify não informou uma música";
+
+
+            return;
+
+        }
+
+
+        // ==================================
+        // DADOS DA MÚSICA
+        // ==================================
+
         currentTrackId =
             track.id;
-        
+
+
         currentProgress =
-            data.progress_ms || 0;
-        
+            data.progress_ms
+            || 0;
+
+
         currentDuration =
-            track.duration_ms || 0;
-        
-        
+            track.duration_ms
+            || 0;
+
+
         name.textContent =
             track.name;
-        
-        
+
+
         artist.textContent =
             track.artists
-            .map(
-                artist =>
-                artist.name
-            )
-            .join(", ");
-        
-        
+                ?.map(
+                    artist =>
+                        artist.name
+                )
+                .join(", ")
+            || "Artista desconhecido";
+
+
         image.src =
-            track.album.images[0]?.url || "";
-        
-        
-        /* ==========================
-           STATUS
-        ========================== */
-        
-        if (data.is_playing) {
-            
+            track.album
+                ?.images?.[0]
+                ?.url
+            || "";
+
+
+        // ==================================
+        // STATUS
+        // ==================================
+
+        if (
+            data.is_playing
+        ) {
+
             status.textContent =
                 "● TOCANDO";
-            
+
+
             status.style.color =
                 "#1ed760";
-            
+
         } else {
-            
+
             status.textContent =
                 "Ⅱ PAUSADO";
-            
+
+
             status.style.color =
                 "#aaaaaa";
-            
+
         }
-        
-        
+
+
+        // ==================================
+        // PROGRESSO
+        // ==================================
+
         updateProgressBar();
-        
+
+
     } catch (error) {
-        
+
         console.error(
             "Erro no currently playing:",
             error
         );
-        
+
     }
-    
+
 }
 
 
-/* ==============================
-   PROGRESSO
-============================== */
+// ==========================================
+// BARRA DE PROGRESSO
+// ==========================================
 
 function updateProgressBar() {
-    
+
     const progress =
         document.getElementById(
             "now-playing-progress"
         );
-    
+
+
     const currentTime =
         document.getElementById(
             "current-time"
         );
-    
+
+
     const totalTime =
         document.getElementById(
             "total-time"
         );
-    
-    
-    if (!currentDuration) {
-        
+
+
+    if (
+        !progress ||
+        !currentTime ||
+        !totalTime
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !currentDuration ||
+        currentDuration <= 0
+    ) {
+
         progress.style.width =
             "0%";
-        
+
+
+        currentTime.textContent =
+            "0:00";
+
+
+        totalTime.textContent =
+            "0:00";
+
+
         return;
+
     }
-    
-    
+
+
     const percentage =
         (
             currentProgress /
             currentDuration
         ) * 100;
-    
-    
+
+
     progress.style.width =
-        `${Math.min(percentage, 100)}%`;
-    
-    
+        `${Math.min(
+            Math.max(
+                percentage,
+                0
+            ),
+            100
+        )}%`;
+
+
     currentTime.textContent =
         formatTime(
             currentProgress
         );
-    
-    
+
+
     totalTime.textContent =
         formatTime(
             currentDuration
         );
-    
+
 }
 
 
-/* ==============================
-   FORMATA TEMPO
-============================== */
+// ==========================================
+// FORMATAR TEMPO
+// ==========================================
 
-function formatTime(milliseconds) {
-    
+function formatTime(
+    milliseconds
+) {
+
     const seconds =
         Math.floor(
             milliseconds / 1000
         );
-    
-    
+
+
     const minutes =
         Math.floor(
             seconds / 60
         );
-    
-    
+
+
     const remainingSeconds =
         seconds % 60;
-    
-    
+
+
     return `${minutes}:${String(
         remainingSeconds
-    ).padStart(2, "0")}`;
+    ).padStart(
+        2,
+        "0"
+    )}`;
+
 }
 
 
-/* ==============================
-   ATUALIZAÇÃO AUTOMÁTICA
-============================== */
+// ==========================================
+// ATUALIZAÇÃO AUTOMÁTICA
+// ==========================================
 
 function startNowPlaying() {
-    
+
+    // Fazer uma consulta imediatamente
+
     updateNowPlaying();
-    
-    
-    if (nowPlayingTimer) {
-        
+
+
+    // Evitar múltiplos timers
+
+    if (
+        nowPlayingTimer
+    ) {
+
         clearInterval(
             nowPlayingTimer
         );
-        
+
     }
-    
-    
+
+
+    // Atualizar a cada 5 segundos
+
     nowPlayingTimer =
         setInterval(
             updateNowPlaying,
             5000
         );
-    
-}       
+
+}
