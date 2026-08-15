@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#030509"
+    >
+
+    <title>
+        Spotday — Cápsula do Tempo
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<main class="page">
+
+
+    <!-- ================================= -->
+    <!-- CONFIGURAÇÃO -->
+    <!-- ================================= -->
+
+    <section
+        id="setup"
+        class="setup"
+    >
+
+        <div class="brand">
+
+            <span>spot</span><strong>day</strong>
+
+        </div>
+
+
+        <p class="eyebrow">
+            CÁPSULA DO TEMPO
+        </p>
+
+
+        <h1>
+            Seus dias<br>
+            em músicas.
+        </h1>
+
+
+        <p class="description">
+
+            Escolha um período e descubra
+            quais músicas marcaram esses dias.
+
+        </p>
+
+
+        <div class="period-options">
+
+            <button
+                class="period-button"
+                data-days="7"
+            >
+
+                <strong>
+                    7
+                </strong>
+
+                <span>
+                    dias
+                </span>
+
+            </button>
+
+
+            <button
+                class="period-button"
+                data-days="10"
+            >
+
+                <strong>
+                    10
+                </strong>
+
+                <span>
+                    dias
+                </span>
+
+            </button>
+
+
+            <button
+                class="period-button active"
+                data-days="15"
+            >
+
+                <strong>
+                    15
+                </strong>
+
+                <span>
+                    dias
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <button
+            id="generate-button"
+            class="generate-button"
+        >
+
+            Criar minha cápsula
+            <span>→</span>
+
+        </button>
+
+
+        <button
+            id="back-button"
+            class="back-button"
+        >
+
+            ← Voltar para o Spotday
+
+        </button>
+
+
+        <p
+            id="setup-message"
+            class="message"
+        ></p>
+
+    </section>
+
+
+
+    <!-- ================================= -->
+    <!-- RESULTADO -->
+    <!-- ================================= -->
+
+    <section
+        id="result"
+        class="result hidden"
+    >
+
+
+        <div class="result-header">
+
+            <button
+                id="result-back"
+                class="result-back"
+            >
+
+                ←
+
+            </button>
+
+
+            <div>
+
+                <span>
+                    SUA CÁPSULA
+                </span>
+
+                <strong
+                    id="result-period"
+                >
+                    15 DIAS
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
+        <!-- PREVIEW -->
+        <!-- ================================= -->
+
+        <div
+            id="preview"
+            class="preview"
+        >
+
+            <div
+                id="capsule"
+                class="capsule"
+            >
+
+
+                <div class="orb orb-1"></div>
+
+                <div class="orb orb-2"></div>
+
+
+                <!-- HEADER -->
+
+                <header class="capsule-header">
+
+                    <div class="capsule-brand">
+
+                        <span>
+                            spot
+                        </span><strong>
+                            day
+                        </strong>
+
+                    </div>
+
+
+                    <div class="period">
+
+                        <small>
+                            CÁPSULA DO TEMPO
+                        </small>
+
+                        <strong id="capsule-period">
+                            15 DIAS
+                        </strong>
+
+                    </div>
+
+                </header>
+
+
+                <!-- INTRO -->
+
+                <section class="intro">
+
+                    <span>
+                        SUA VIDA EM MÚSICAS
+                    </span>
+
+                    <h1>
+                        Os sons que<br>
+                        marcaram seus dias.
+                    </h1>
+
+                </section>
+
+
+                <!-- DESTAQUE -->
+
+                <section class="featured">
+
+                    <div class="cover">
+
+                        <img
+                            id="cover"
+                            src=""
+                            alt=""
+                        >
+
+                    </div>
+
+
+                    <div class="featured-info">
+
+                        <span class="section-label">
+                            MÚSICA MAIS OUVIDA
+                        </span>
+
+                        <h2 id="track-name">
+                            —
+                        </h2>
+
+                        <p id="artist-name">
+                            —
+                        </p>
+
+
+                        <div class="play-count">
+
+                            <strong id="play-count">
+                                0
+                            </strong>
+
+                            <span>
+                                reproduções
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- STATS -->
+
+                <section class="stats">
+
+                    <div class="stat">
+
+                        <strong id="tracks">
+                            0
+                        </strong>
+
+                        <span>
+                            músicas
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <strong id="artists">
+                            0
+                        </strong>
+
+                        <span>
+                            artistas
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <strong id="minutes">
+                            0m
+                        </strong>
+
+                        <span>
+                            ouvindo
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ARTISTA -->
+
+                <section class="top-artist">
+
+                    <div>
+
+                        <span class="section-label">
+                            ARTISTA MAIS OUVIDO
+                        </span>
+
+                        <h2 id="top-artist">
+                            —
+                        </h2>
+
+                    </div>
+
+
+                    <strong>
+                        #01
+                    </strong>
+
+                </section>
+
+
+                <!-- RANKING -->
+
+                <section class="ranking">
+
+                    <div class="ranking-title">
+
+                        <span>
+                            TOP 5 MÚSICAS
+                        </span>
+
+                        <span>
+                            PLAYS
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="ranking-list"
+                    ></div>
+
+                </section>
+
+
+                <footer>
+
+                    <strong>
+                        SPOTDAY
+                    </strong>
+
+                    <span>
+                        SUA VIDA EM MÚSICAS.
+                    </span>
+
+                </footer>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
+        <!-- AÇÕES -->
+        <!-- ================================= -->
+
+        <div class="actions">
+
+            <button
+                id="save-button"
+                class="primary"
+            >
+
+                📸
+                <span>
+                    Salvar imagem
+                </span>
+
+            </button>
+
+
+            <button
+                id="share-button"
+                class="secondary"
+            >
+
+                ↗
+                <span>
+                    Compartilhar
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <p
+            id="message"
+            class="message"
+        ></p>
+
+
+    </section>
+
+</main>
+
+
+<!-- html2canvas -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
+></script>
+
+
+<!-- ================================= -->
+<!-- SPOTDAY -->
+<!-- ================================= -->
+
+<script src="../auth.js"></script>
+
+<script src="../spotify.js"></script>
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
