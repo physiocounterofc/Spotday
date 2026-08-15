@@ -10,11 +10,12 @@ const SPOTIFY_API =
 // FETCH AUTENTICADO
 // ==========================================
 //
-// Sempre tenta obter um access token válido
-// antes de fazer uma requisição.
+// Obtém um access token válido.
+// Se estiver expirado, o auth.js
+// tenta renovar automaticamente.
 //
-// Se o token estiver expirado, o auth.js
-// automaticamente usa o refresh_token.
+// Se a API responder 401, tentamos
+// renovar uma vez e repetir a requisição.
 // ==========================================
 
 async function spotifyFetch(
@@ -40,11 +41,14 @@ async function spotifyFetch(
 
 
     // ======================================
-    // PRIMEIRA REQUISIÇÃO
+    // FUNÇÃO INTERNA PARA REQUISIÇÃO
     // ======================================
 
-    let response =
-        await fetch(
+    async function makeRequest(
+        accessToken
+    ) {
+
+        return await fetch(
             SPOTIFY_API + endpoint,
             {
 
@@ -55,23 +59,28 @@ async function spotifyFetch(
                     ...(options.headers || {}),
 
                     Authorization:
-                        `Bearer ${token}`
+                        `Bearer ${accessToken}`
 
                 }
 
             }
         );
 
+    }
+
 
     // ======================================
-    // TOKEN INVÁLIDO
+    // PRIMEIRA REQUISIÇÃO
     // ======================================
-    //
-    // Isso pode acontecer se o token for
-    // revogado ou expirar entre a verificação
-    // e a requisição.
-    //
-    // Tentamos renovar UMA vez.
+
+    let response =
+        await makeRequest(
+            token
+        );
+
+
+    // ======================================
+    // TOKEN REJEITADO
     // ======================================
 
     if (
@@ -83,54 +92,26 @@ async function spotifyFetch(
         );
 
 
-        const refreshToken =
-            localStorage.getItem(
-                "spotday_refresh_token"
-            );
+        const refreshed =
+            await refreshAccessToken();
 
 
         if (
-            refreshToken
+            refreshed
         ) {
 
-            const refreshed =
-                await refreshAccessToken(
-                    refreshToken
-                );
+            token =
+                await getValidAccessToken();
 
 
             if (
-                refreshed
+                token
             ) {
 
-                token =
-                    await getValidAccessToken();
-
-
-                if (
-                    token
-                ) {
-
-                    response =
-                        await fetch(
-                            SPOTIFY_API + endpoint,
-                            {
-
-                                ...options,
-
-                                headers: {
-
-                                    ...(options.headers || {}),
-
-                                    Authorization:
-                                        `Bearer ${token}`
-
-                                }
-
-                            }
-                        );
-
-                }
+                response =
+                    await makeRequest(
+                        token
+                    );
 
             }
 
@@ -140,25 +121,14 @@ async function spotifyFetch(
 
 
     // ======================================
-    // AINDA NÃO AUTORIZADO
+    // SESSÃO REALMENTE EXPIRADA
     // ======================================
 
     if (
         response.status === 401
     ) {
 
-        /*
-         * Só chegamos aqui se:
-         *
-         * 1. O access token foi rejeitado
-         * 2. Tentamos refresh
-         * 3. O refresh não funcionou
-         *
-         * Nesse caso a sessão realmente
-         * pode ter expirado/revogado.
-         */
-
-        clearTokens();
+        clearAuthData();
 
 
         throw new Error(
@@ -228,6 +198,10 @@ async function getCurrentlyPlaying() {
         await getValidAccessToken();
 
 
+    // ======================================
+    // NÃO AUTENTICADO
+    // ======================================
+
     if (!token) {
 
         throw new Error(
@@ -236,6 +210,10 @@ async function getCurrentlyPlaying() {
 
     }
 
+
+    // ======================================
+    // PRIMEIRA REQUISIÇÃO
+    // ======================================
 
     let response =
         await fetch(
@@ -267,7 +245,7 @@ async function getCurrentlyPlaying() {
 
 
     // ======================================
-    // TOKEN INVÁLIDO
+    // TOKEN REJEITADO
     // ======================================
 
     if (
@@ -275,54 +253,40 @@ async function getCurrentlyPlaying() {
     ) {
 
         console.warn(
-            "Token rejeitado no Now Playing. Renovando..."
+            "Token rejeitado no Now Playing. Tentando renovar..."
         );
 
 
-        const refreshToken =
-            localStorage.getItem(
-                "spotday_refresh_token"
-            );
+        const refreshed =
+            await refreshAccessToken();
 
 
         if (
-            refreshToken
+            refreshed
         ) {
 
-            const refreshed =
-                await refreshAccessToken(
-                    refreshToken
-                );
+            token =
+                await getValidAccessToken();
 
 
             if (
-                refreshed
+                token
             ) {
 
-                token =
-                    await getValidAccessToken();
+                response =
+                    await fetch(
+                        `${SPOTIFY_API}/me/player/currently-playing`,
+                        {
 
+                            headers: {
 
-                if (
-                    token
-                ) {
-
-                    response =
-                        await fetch(
-                            `${SPOTIFY_API}/me/player/currently-playing`,
-                            {
-
-                                headers: {
-
-                                    Authorization:
-                                        `Bearer ${token}`
-
-                                }
+                                Authorization:
+                                    `Bearer ${token}`
 
                             }
-                        );
 
-                }
+                        }
+                    );
 
             }
 
@@ -332,18 +296,31 @@ async function getCurrentlyPlaying() {
 
 
     // ======================================
-    // AINDA 401
+    // NADA TOCANDO APÓS RENOVAÇÃO
+    // ======================================
+
+    if (
+        response.status === 204
+    ) {
+
+        return null;
+
+    }
+
+
+    // ======================================
+    // SESSÃO EXPIRADA
     // ======================================
 
     if (
         response.status === 401
     ) {
 
-        clearTokens();
+        clearAuthData();
 
 
         throw new Error(
-            "Sessão do Spotify expirada."
+            "Sessão do Spotify expirada. Faça login novamente."
         );
 
     }
