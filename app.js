@@ -819,7 +819,9 @@ async function updateNowPlaying() {
                 "0:00";
 
             
-            image.src = "assets/icon-512.png";
+            image.removeAttribute(
+                "src"
+            );
 
 
             currentTrackId =
