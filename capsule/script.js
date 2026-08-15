@@ -38,12 +38,6 @@ const generateButton =
     );
 
 
-const saveButton =
-    document.getElementById(
-        "save-button"
-    );
-
-
 const shareButton =
     document.getElementById(
         "share-button"
@@ -210,8 +204,18 @@ async function generateCapsule() {
         );
 
 
+        // Espera o navegador atualizar
+        // o layout antes de calcular
+        // o tamanho da arte.
+
         requestAnimationFrame(
-            resizePreview
+            () => {
+
+                requestAnimationFrame(
+                    resizePreview
+                );
+
+            }
         );
 
 
@@ -248,7 +252,6 @@ function calculateStats(
     items
 ) {
 
-
     const trackMap =
         new Map();
 
@@ -260,10 +263,6 @@ function calculateStats(
     let totalDuration =
         0;
 
-
-    // ======================================
-    // CONTAR
-    // ======================================
 
     items.forEach(
         item => {
@@ -466,7 +465,6 @@ function renderCapsule(
     data
 ) {
 
-
     const period =
         `${data.days} DIAS`;
 
@@ -607,7 +605,6 @@ function formatListeningTime(
     minutes
 ) {
 
-
     if (
         minutes < 60
     ) {
@@ -649,7 +646,6 @@ function renderRanking(
     tracks
 ) {
 
-
     const container =
         document.getElementById(
             "ranking-list"
@@ -665,7 +661,6 @@ function renderRanking(
             item,
             index
         ) => {
-
 
             const track =
                 item.track;
@@ -745,10 +740,10 @@ function renderRanking(
 
 function resizePreview() {
 
-
     if (
         !preview ||
-        !capsule
+        !capsule ||
+        result.classList.contains("hidden")
     ) {
 
         return;
@@ -756,15 +751,88 @@ function resizePreview() {
     }
 
 
-    const width =
+    const previewWidth =
         preview.clientWidth;
 
 
-    const scale =
+    if (
+        previewWidth <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    // ======================================
+    // ESCALA BASEADA NA LARGURA
+    // ======================================
+
+    let scale =
         Math.min(
-            width / 1080,
+            previewWidth / 1080,
             1
         );
+
+
+    // ======================================
+    // ALTURA DISPONÍVEL DA TELA
+    // ======================================
+
+    const viewportHeight =
+        window.innerHeight;
+
+
+    const header =
+        document.querySelector(
+            ".result-header"
+        );
+
+
+    const actions =
+        document.querySelector(
+            ".actions"
+        );
+
+
+    const headerHeight =
+        header?.getBoundingClientRect()
+            ?.height || 50;
+
+
+    const actionsHeight =
+        actions?.getBoundingClientRect()
+            ?.height || 50;
+
+
+    const availableHeight =
+        viewportHeight -
+        headerHeight -
+        actionsHeight -
+        45;
+
+
+    // ======================================
+    // SE PRECISAR, REDUZ A ARTE
+    // PARA ELA CABER NA TELA
+    // ======================================
+
+    if (
+        availableHeight > 0
+    ) {
+
+        const heightScale =
+            availableHeight /
+            1350;
+
+
+        scale =
+            Math.min(
+                scale,
+                heightScale
+            );
+
+    }
 
 
     capsule.style.transform =
@@ -778,11 +846,10 @@ function resizePreview() {
 
 
 // ==========================================
-// EXPORTAR
+// EXPORTAR PARA COMPARTILHAMENTO
 // ==========================================
 
 async function createExportCanvas() {
-
 
     const clone =
         capsule.cloneNode(
@@ -907,113 +974,12 @@ async function createExportCanvas() {
 
 
 // ==========================================
-// SALVAR
-// ==========================================
-
-saveButton.addEventListener(
-    "click",
-    async () => {
-
-
-        try {
-
-            saveButton.disabled =
-                true;
-
-
-            showMessage(
-                "Gerando imagem..."
-            );
-
-
-            const canvas =
-                await createExportCanvas();
-
-
-            const blob =
-                await canvasToBlob(
-                    canvas
-                );
-
-
-            const url =
-                URL.createObjectURL(
-                    blob
-                );
-
-
-            const link =
-                document.createElement(
-                    "a"
-                );
-
-
-            link.href =
-                url;
-
-
-            link.download =
-                "spotday-capsula-do-tempo.png";
-
-
-            document.body.appendChild(
-                link
-            );
-
-
-            link.click();
-
-
-            link.remove();
-
-
-            setTimeout(
-                () => {
-
-                    URL.revokeObjectURL(
-                        url
-                    );
-
-                },
-                1000
-            );
-
-
-            showMessage(
-                "Imagem salva! ✨"
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                error
-            );
-
-
-            showMessage(
-                "Não foi possível salvar a imagem."
-            );
-
-        } finally {
-
-            saveButton.disabled =
-                false;
-
-        }
-
-    }
-);
-
-
-// ==========================================
 // COMPARTILHAR
 // ==========================================
 
 shareButton.addEventListener(
     "click",
     async () => {
-
 
         try {
 
@@ -1049,6 +1015,10 @@ shareButton.addEventListener(
                 );
 
 
+            // ==================================
+            // COMPARTILHAMENTO NATIVO
+            // ==================================
+
             if (
 
                 navigator.share &&
@@ -1082,60 +1052,14 @@ shareButton.addEventListener(
 
             } else {
 
-                // Fallback para salvar
-
-                const url =
-                    URL.createObjectURL(
-                        blob
-                    );
-
-
-                const link =
-                    document.createElement(
-                        "a"
-                    );
-
-
-                link.href =
-                    url;
-
-
-                link.download =
-                    "spotday-capsula-do-tempo.png";
-
-
-                document.body.appendChild(
-                    link
-                );
-
-
-                link.click();
-
-
-                link.remove();
-
-
-                setTimeout(
-                    () => {
-
-                        URL.revokeObjectURL(
-                            url
-                        );
-
-                    },
-                    1000
-                );
-
-
                 showMessage(
-                    "Seu navegador não suporta compartilhamento direto. A imagem foi salva."
+                    "Seu navegador não suporta compartilhamento de imagens."
                 );
 
             }
 
 
         } catch (error) {
-
 
             if (
                 error.name ===
@@ -1148,12 +1072,13 @@ shareButton.addEventListener(
 
 
             console.error(
+                "Erro ao compartilhar:",
                 error
             );
 
 
             showMessage(
-                "Não foi possível compartilhar."
+                "Não foi possível compartilhar a imagem."
             );
 
 
@@ -1169,7 +1094,7 @@ shareButton.addEventListener(
 
 
 // ==========================================
-// VOLTAR
+// VOLTAR PARA O SPOTDAY
 // ==========================================
 
 document.getElementById(
@@ -1185,6 +1110,10 @@ document.getElementById(
 );
 
 
+// ==========================================
+// VOLTAR DA CÁPSULA
+// ==========================================
+
 document.getElementById(
     "result-back"
 ).addEventListener(
@@ -1195,13 +1124,18 @@ document.getElementById(
             "hidden"
         );
 
+
         setup.classList.remove(
             "hidden"
         );
 
-        requestAnimationFrame(
-            resizePreview
-        );
+
+        capsule.style.transform =
+            "none";
+
+
+        preview.style.height =
+            "auto";
 
     }
 );
@@ -1255,7 +1189,6 @@ function canvasToBlob(
 function escapeHTML(
     text
 ) {
-
 
     const div =
         document.createElement(
