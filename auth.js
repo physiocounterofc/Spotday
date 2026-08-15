@@ -212,7 +212,7 @@ async function loginWithSpotify() {
             // durante os testes
 
             show_dialog:
-                "true",
+                "false",
 
             // PKCE
 
