@@ -11,17 +11,39 @@
 const CLIENT_ID =
     "551a2178273b4113abc75c789acffeee";
 
+
 const REDIRECT_URI =
     "https://physiocounterofc.github.io/Spotday/";
 
-
-// Permissões do Spotday
 
 const SCOPES = [
     "user-read-private",
     "user-read-recently-played",
     "user-read-currently-playing"
 ].join(" ");
+
+
+// ==========================================
+// CHAVES DO LOCAL STORAGE
+// ==========================================
+
+const ACCESS_TOKEN_KEY =
+    "spotday_access_token";
+
+const REFRESH_TOKEN_KEY =
+    "spotday_refresh_token";
+
+const EXPIRES_KEY =
+    "spotday_token_expires";
+
+const SCOPES_KEY =
+    "spotday_scopes";
+
+const VERIFIER_KEY =
+    "spotday_code_verifier";
+
+const STATE_KEY =
+    "spotday_state";
 
 
 // ==========================================
@@ -41,7 +63,9 @@ function generateRandomString(length) {
     return Array.from(values)
         .map(
             value =>
-                characters[value % characters.length]
+                characters[
+                    value % characters.length
+                ]
         )
         .join("");
 }
@@ -92,9 +116,13 @@ async function createCodeChallenge(
 ) {
 
     const hashed =
-        await sha256(codeVerifier);
+        await sha256(
+            codeVerifier
+        );
 
-    return base64UrlEncode(hashed);
+    return base64UrlEncode(
+        hashed
+    );
 }
 
 
@@ -104,11 +132,7 @@ async function createCodeChallenge(
 
 async function loginWithSpotify() {
 
-    // Verificar Client ID
-
-    if (
-        !CLIENT_ID
-    ) {
+    if (!CLIENT_ID) {
 
         alert(
             "Client ID do Spotify não encontrado."
@@ -127,7 +151,7 @@ async function loginWithSpotify() {
 
 
     // ======================================
-    // GERAR PKCE CHALLENGE
+    // GERAR CODE CHALLENGE
     // ======================================
 
     const codeChallenge =
@@ -136,10 +160,8 @@ async function loginWithSpotify() {
         );
 
 
-    // Guardar verifier
-
     localStorage.setItem(
-        "spotday_code_verifier",
+        VERIFIER_KEY,
         codeVerifier
     );
 
@@ -153,13 +175,13 @@ async function loginWithSpotify() {
 
 
     localStorage.setItem(
-        "spotday_state",
+        STATE_KEY,
         state
     );
 
 
     // ======================================
-    // CRIAR URL DO SPOTIFY
+    // URL DE AUTORIZAÇÃO
     // ======================================
 
     const authURL =
@@ -186,7 +208,8 @@ async function loginWithSpotify() {
             state:
                 state,
 
-            // Força a tela de autorização
+            // Força nova autorização
+            // durante os testes
 
             show_dialog:
                 "true",
@@ -207,7 +230,7 @@ async function loginWithSpotify() {
 
 
     // ======================================
-    // IR PARA O SPOTIFY
+    // REDIRECIONAR PARA SPOTIFY
     // ======================================
 
     window.location.href =
@@ -216,7 +239,7 @@ async function loginWithSpotify() {
 
 
 // ==========================================
-// PROCESSAR CALLBACK DO SPOTIFY
+// PROCESSAR CALLBACK
 // ==========================================
 
 async function handleCallback() {
@@ -230,15 +253,17 @@ async function handleCallback() {
     const code =
         params.get("code");
 
+
     const state =
         params.get("state");
+
 
     const error =
         params.get("error");
 
 
     // ======================================
-    // USUÁRIO NEGOU
+    // ERRO / USUÁRIO NEGOU
     // ======================================
 
     if (error) {
@@ -250,11 +275,11 @@ async function handleCallback() {
 
 
         localStorage.removeItem(
-            "spotday_code_verifier"
+            VERIFIER_KEY
         );
 
         localStorage.removeItem(
-            "spotday_state"
+            STATE_KEY
         );
 
 
@@ -278,7 +303,7 @@ async function handleCallback() {
 
     const savedState =
         localStorage.getItem(
-            "spotday_state"
+            STATE_KEY
         );
 
 
@@ -301,7 +326,7 @@ async function handleCallback() {
 
     const codeVerifier =
         localStorage.getItem(
-            "spotday_code_verifier"
+            VERIFIER_KEY
         );
 
 
@@ -360,18 +385,19 @@ async function handleCallback() {
             );
 
 
+        const data =
+            await response.json();
+
+
         // ==================================
         // ERRO
         // ==================================
 
         if (!response.ok) {
 
-            const errorText =
-                await response.text();
-
             console.error(
                 "Erro ao conseguir token:",
-                errorText
+                data
             );
 
             return false;
@@ -379,78 +405,12 @@ async function handleCallback() {
 
 
         // ==================================
-        // RESPOSTA
+        // SALVAR TOKENS
         // ==================================
 
-        const data =
-            await response.json();
-
-
-        // ==================================
-        // ACCESS TOKEN
-        // ==================================
-
-        localStorage.setItem(
-            "spotday_access_token",
-            data.access_token
+        saveTokenData(
+            data
         );
-
-
-        // ==================================
-        // REFRESH TOKEN
-        // ==================================
-
-        if (
-            data.refresh_token
-        ) {
-
-            localStorage.setItem(
-                "spotday_refresh_token",
-                data.refresh_token
-            );
-
-        }
-
-
-        // ==================================
-        // EXPIRAÇÃO
-        // ==================================
-
-        if (
-            data.expires_in
-        ) {
-
-            localStorage.setItem(
-                "spotday_token_expires",
-                String(
-                    Date.now() +
-                    data.expires_in * 1000
-                )
-            );
-
-        }
-
-
-        // ==================================
-        // SCOPES CONCEDIDOS
-        // ==================================
-
-        if (
-            data.scope
-        ) {
-
-            localStorage.setItem(
-                "spotday_scopes",
-                data.scope
-            );
-
-
-            console.log(
-                "Scopes concedidos:",
-                data.scope
-            );
-
-        }
 
 
         // ==================================
@@ -458,11 +418,11 @@ async function handleCallback() {
         // ==================================
 
         localStorage.removeItem(
-            "spotday_code_verifier"
+            VERIFIER_KEY
         );
 
         localStorage.removeItem(
-            "spotday_state"
+            STATE_KEY
         );
 
 
@@ -497,13 +457,278 @@ async function handleCallback() {
 
 
 // ==========================================
+// SALVAR DADOS DO TOKEN
+// ==========================================
+
+function saveTokenData(
+    data
+) {
+
+    if (
+        data.access_token
+    ) {
+
+        localStorage.setItem(
+            ACCESS_TOKEN_KEY,
+            data.access_token
+        );
+
+    }
+
+
+    // ======================================
+    // EXPIRAÇÃO
+    // ======================================
+
+    if (
+        data.expires_in
+    ) {
+
+        const expiresAt =
+            Date.now() +
+            (
+                data.expires_in *
+                1000
+            );
+
+
+        localStorage.setItem(
+            EXPIRES_KEY,
+            String(
+                expiresAt
+            )
+        );
+
+    }
+
+
+    // ======================================
+    // REFRESH TOKEN
+    // ======================================
+
+    if (
+        data.refresh_token
+    ) {
+
+        localStorage.setItem(
+            REFRESH_TOKEN_KEY,
+            data.refresh_token
+        );
+
+    }
+
+
+    // ======================================
+    // SCOPES
+    // ======================================
+
+    if (
+        data.scope
+    ) {
+
+        localStorage.setItem(
+            SCOPES_KEY,
+            data.scope
+        );
+
+
+        console.log(
+            "Scopes concedidos:",
+            data.scope
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// RENOVAR ACCESS TOKEN
+// ==========================================
+
+async function refreshAccessToken() {
+
+    const refreshToken =
+        localStorage.getItem(
+            REFRESH_TOKEN_KEY
+        );
+
+
+    if (!refreshToken) {
+
+        return null;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "https://accounts.spotify.com/api/token",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+
+                    },
+
+                    body:
+                        new URLSearchParams({
+
+                            grant_type:
+                                "refresh_token",
+
+                            refresh_token:
+                                refreshToken,
+
+                            client_id:
+                                CLIENT_ID
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        // ==================================
+        // REFRESH TOKEN INVÁLIDO
+        // ==================================
+
+        if (!response.ok) {
+
+            console.error(
+                "Erro ao renovar token:",
+                data
+            );
+
+
+            if (
+                data.error ===
+                "invalid_grant"
+            ) {
+
+                clearAuthData();
+
+            }
+
+
+            return null;
+        }
+
+
+        // ==================================
+        // SALVAR NOVO ACCESS TOKEN
+        // ==================================
+
+        saveTokenData(
+            data
+        );
+
+
+        console.log(
+            "Access token renovado."
+        );
+
+
+        return data.access_token;
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao renovar access token:",
+            error
+        );
+
+
+        return null;
+    }
+}
+
+
+// ==========================================
 // PEGAR ACCESS TOKEN
 // ==========================================
+
+async function getValidAccessToken() {
+
+    const accessToken =
+        localStorage.getItem(
+            ACCESS_TOKEN_KEY
+        );
+
+
+    const expiresAt =
+        Number(
+            localStorage.getItem(
+                EXPIRES_KEY
+            )
+        );
+
+
+    // ======================================
+    // SEM TOKEN
+    // ======================================
+
+    if (!accessToken) {
+
+        return null;
+    }
+
+
+    // ======================================
+    // TOKEN AINDA VÁLIDO
+    //
+    // Margem de 60 segundos
+    // ======================================
+
+    if (
+        expiresAt &&
+        Date.now() <
+        expiresAt - 60000
+    ) {
+
+        return accessToken;
+    }
+
+
+    // ======================================
+    // TOKEN EXPIRADO
+    // ======================================
+
+    console.log(
+        "Access token expirado. Renovando..."
+    );
+
+
+    const newToken =
+        await refreshAccessToken();
+
+
+    return newToken;
+}
+
+
+// ==========================================
+// PEGAR ACCESS TOKEN
+// ==========================================
+//
+// Mantém compatibilidade com o restante
+// do Spotday.
 
 function getAccessToken() {
 
     return localStorage.getItem(
-        "spotday_access_token"
+        ACCESS_TOKEN_KEY
     );
 }
 
@@ -521,35 +746,44 @@ function isLoggedIn() {
 
 
 // ==========================================
+// LIMPAR AUTENTICAÇÃO
+// ==========================================
+
+function clearAuthData() {
+
+    localStorage.removeItem(
+        ACCESS_TOKEN_KEY
+    );
+
+    localStorage.removeItem(
+        REFRESH_TOKEN_KEY
+    );
+
+    localStorage.removeItem(
+        EXPIRES_KEY
+    );
+
+    localStorage.removeItem(
+        SCOPES_KEY
+    );
+
+    localStorage.removeItem(
+        VERIFIER_KEY
+    );
+
+    localStorage.removeItem(
+        STATE_KEY
+    );
+}
+
+
+// ==========================================
 // LOGOUT
 // ==========================================
 
 function logout() {
 
-    localStorage.removeItem(
-        "spotday_access_token"
-    );
-
-    localStorage.removeItem(
-        "spotday_refresh_token"
-    );
-
-    localStorage.removeItem(
-        "spotday_token_expires"
-    );
-
-    localStorage.removeItem(
-        "spotday_scopes"
-    );
-
-    localStorage.removeItem(
-        "spotday_code_verifier"
-    );
-
-    localStorage.removeItem(
-        "spotday_state"
-    );
-
+    clearAuthData();
 
     window.location.reload();
 }
