@@ -1105,3 +1105,22 @@ function startNowPlaying() {
         );
 
 }
+
+const capsuleButton =
+    document.getElementById(
+        "capsule-button"
+    );
+
+if (capsuleButton) {
+
+    capsuleButton.addEventListener(
+        "click",
+        () => {
+
+            window.location.href =
+                "./capsula/";
+
+        }
+    );
+
+}
