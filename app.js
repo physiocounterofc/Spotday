@@ -412,3 +412,278 @@ if ("serviceWorker" in navigator) {
     );
     
 }
+
+/* ==============================
+   NOW PLAYING
+============================== */
+
+let nowPlayingTimer = null;
+let currentTrackId = null;
+let currentProgress = 0;
+let currentDuration = 0;
+
+
+async function updateNowPlaying() {
+    
+    try {
+        
+        const data =
+            await getCurrentlyPlaying();
+        
+        
+        const image =
+            document.getElementById(
+                "now-playing-image"
+            );
+        
+        const name =
+            document.getElementById(
+                "now-playing-name"
+            );
+        
+        const artist =
+            document.getElementById(
+                "now-playing-artist"
+            );
+        
+        const status =
+            document.getElementById(
+                "playing-status"
+            );
+        
+        const progress =
+            document.getElementById(
+                "now-playing-progress"
+            );
+        
+        const currentTime =
+            document.getElementById(
+                "current-time"
+            );
+        
+        const totalTime =
+            document.getElementById(
+                "total-time"
+            );
+        
+        
+        /* ==========================
+           NADA TOCANDO
+        ========================== */
+        
+        if (
+            !data ||
+            !data.item ||
+            data.item.type !== "track"
+        ) {
+            
+            name.textContent =
+                "Nada tocando";
+            
+            artist.textContent =
+                "Abra o Spotify para começar";
+            
+            status.textContent =
+                "● PARADO";
+            
+            status.style.color =
+                "#888";
+            
+            progress.style.width =
+                "0%";
+            
+            currentTime.textContent =
+                "0:00";
+            
+            totalTime.textContent =
+                "0:00";
+            
+            image.removeAttribute("src");
+            
+            currentTrackId = null;
+            
+            return;
+        }
+        
+        
+        const track =
+            data.item;
+        
+        
+        /* ==========================
+           DADOS DA MÚSICA
+        ========================== */
+        
+        currentTrackId =
+            track.id;
+        
+        currentProgress =
+            data.progress_ms || 0;
+        
+        currentDuration =
+            track.duration_ms || 0;
+        
+        
+        name.textContent =
+            track.name;
+        
+        
+        artist.textContent =
+            track.artists
+            .map(
+                artist =>
+                artist.name
+            )
+            .join(", ");
+        
+        
+        image.src =
+            track.album.images[0]?.url || "";
+        
+        
+        /* ==========================
+           STATUS
+        ========================== */
+        
+        if (data.is_playing) {
+            
+            status.textContent =
+                "● TOCANDO";
+            
+            status.style.color =
+                "#1ed760";
+            
+        } else {
+            
+            status.textContent =
+                "Ⅱ PAUSADO";
+            
+            status.style.color =
+                "#aaaaaa";
+            
+        }
+        
+        
+        updateProgressBar();
+        
+    } catch (error) {
+        
+        console.error(
+            "Erro no currently playing:",
+            error
+        );
+        
+    }
+    
+}
+
+
+/* ==============================
+   PROGRESSO
+============================== */
+
+function updateProgressBar() {
+    
+    const progress =
+        document.getElementById(
+            "now-playing-progress"
+        );
+    
+    const currentTime =
+        document.getElementById(
+            "current-time"
+        );
+    
+    const totalTime =
+        document.getElementById(
+            "total-time"
+        );
+    
+    
+    if (!currentDuration) {
+        
+        progress.style.width =
+            "0%";
+        
+        return;
+    }
+    
+    
+    const percentage =
+        (
+            currentProgress /
+            currentDuration
+        ) * 100;
+    
+    
+    progress.style.width =
+        `${Math.min(percentage, 100)}%`;
+    
+    
+    currentTime.textContent =
+        formatTime(
+            currentProgress
+        );
+    
+    
+    totalTime.textContent =
+        formatTime(
+            currentDuration
+        );
+    
+}
+
+
+/* ==============================
+   FORMATA TEMPO
+============================== */
+
+function formatTime(milliseconds) {
+    
+    const seconds =
+        Math.floor(
+            milliseconds / 1000
+        );
+    
+    
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+    
+    
+    const remainingSeconds =
+        seconds % 60;
+    
+    
+    return `${minutes}:${String(
+        remainingSeconds
+    ).padStart(2, "0")}`;
+}
+
+
+/* ==============================
+   ATUALIZAÇÃO AUTOMÁTICA
+============================== */
+
+function startNowPlaying() {
+    
+    updateNowPlaying();
+    
+    
+    if (nowPlayingTimer) {
+        
+        clearInterval(
+            nowPlayingTimer
+        );
+        
+    }
+    
+    
+    nowPlayingTimer =
+        setInterval(
+            updateNowPlaying,
+            5000
+        );
+    
+}       
