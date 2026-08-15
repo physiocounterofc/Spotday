@@ -1,0 +1,1381 @@
+* {
+
+    box-sizing:
+        border-box;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+}
+
+
+html,
+body {
+
+    width:
+        100%;
+
+    min-height:
+        100%;
+
+}
+
+
+body {
+
+    min-height:
+        100vh;
+
+    background:
+        #030509;
+
+    color:
+        white;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    padding:
+        18px 10px;
+
+}
+
+
+button {
+
+    font-family:
+        inherit;
+
+}
+
+
+/* ================================= */
+/* PAGE */
+/* ================================= */
+
+.page {
+
+    width:
+        100%;
+
+    max-width:
+        700px;
+
+    margin:
+        auto;
+
+}
+
+
+/* ================================= */
+/* SETUP */
+/* ================================= */
+
+.setup {
+
+    min-height:
+        calc(100vh - 36px);
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    text-align:
+        center;
+
+    padding:
+        30px 20px;
+
+}
+
+
+.brand {
+
+    font-size:
+        38px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -3px;
+
+}
+
+
+.brand strong {
+
+    color:
+        #1ed760;
+
+}
+
+
+.eyebrow {
+
+    margin-top:
+        50px;
+
+    color:
+        #1ed760;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        3px;
+
+}
+
+
+.setup h1 {
+
+    margin-top:
+        12px;
+
+    font-size:
+        48px;
+
+    line-height:
+        1;
+
+    letter-spacing:
+        -3px;
+
+}
+
+
+.description {
+
+    max-width:
+        390px;
+
+    margin-top:
+        20px;
+
+    color:
+        #777d85;
+
+    font-size:
+        15px;
+
+    line-height:
+        1.5;
+
+}
+
+
+/* ================================= */
+/* PERIOD */
+/* ================================= */
+
+.period-options {
+
+    width:
+        100%;
+
+    max-width:
+        430px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        10px;
+
+    margin-top:
+        35px;
+
+}
+
+
+.period-button {
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .08
+        );
+
+    border-radius:
+        17px;
+
+    padding:
+        18px 10px;
+
+    background:
+        #0d1219;
+
+    color:
+        white;
+
+    cursor:
+        pointer;
+
+}
+
+
+.period-button strong {
+
+    display:
+        block;
+
+    font-size:
+        27px;
+
+}
+
+
+.period-button span {
+
+    display:
+        block;
+
+    margin-top:
+        3px;
+
+    color:
+        #777;
+
+    font-size:
+        12px;
+
+}
+
+
+.period-button.active {
+
+    border-color:
+        rgba(
+            30,
+            215,
+            96,
+            .5
+        );
+
+    background:
+        rgba(
+            30,
+            215,
+            96,
+            .08
+        );
+
+}
+
+
+.period-button.active strong {
+
+    color:
+        #1ed760;
+
+}
+
+
+/* ================================= */
+/* GENERATE */
+/* ================================= */
+
+.generate-button {
+
+    width:
+        100%;
+
+    max-width:
+        430px;
+
+    margin-top:
+        15px;
+
+    border:
+        0;
+
+    border-radius:
+        999px;
+
+    padding:
+        16px 20px;
+
+    background:
+        #1ed760;
+
+    color:
+        #031006;
+
+    font-size:
+        15px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+}
+
+
+.generate-button span {
+
+    margin-left:
+        8px;
+
+}
+
+
+.back-button {
+
+    margin-top:
+        18px;
+
+    border:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        #666;
+
+    font-size:
+        12px;
+
+    cursor:
+        pointer;
+
+}
+
+
+/* ================================= */
+/* RESULT */
+/* ================================= */
+
+.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+.result-header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        14px;
+
+    padding:
+        8px 2px 15px;
+
+}
+
+
+.result-header > div {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.result-header span {
+
+    color:
+        #666;
+
+    font-size:
+        9px;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.result-header strong {
+
+    margin-top:
+        3px;
+
+    color:
+        #1ed760;
+
+    font-size:
+        12px;
+
+}
+
+
+.result-back {
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .08
+        );
+
+    border-radius:
+        50%;
+
+    background:
+        #11161d;
+
+    color:
+        white;
+
+    cursor:
+        pointer;
+
+}
+
+
+/* ================================= */
+/* PREVIEW */
+/* ================================= */
+
+.preview {
+
+    width:
+        100%;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* ================================= */
+/* CAPSULE */
+/* ================================= */
+
+.capsule {
+
+    width:
+        1080px;
+
+    height:
+        1350px;
+
+    flex-shrink:
+        0;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    padding:
+        65px 70px;
+
+    background:
+
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(
+                30,
+                215,
+                96,
+                .18
+            ),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 0% 100%,
+            rgba(
+                30,
+                215,
+                96,
+                .07
+            ),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            145deg,
+            #111821,
+            #05080c
+        );
+
+    border-radius:
+        34px;
+
+}
+
+
+.orb {
+
+    position:
+        absolute;
+
+    border-radius:
+        50%;
+
+    pointer-events:
+        none;
+
+}
+
+
+.orb-1 {
+
+    width:
+        600px;
+
+    height:
+        600px;
+
+    right:
+        -420px;
+
+    top:
+        -400px;
+
+    border:
+        1px solid
+        rgba(
+            30,
+            215,
+            96,
+            .12
+        );
+
+}
+
+
+.orb-2 {
+
+    width:
+        450px;
+
+    height:
+        450px;
+
+    left:
+        -330px;
+
+    bottom:
+        -320px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .04
+        );
+
+}
+
+
+/* ================================= */
+/* CAPSULE HEADER */
+/* ================================= */
+
+.capsule-header {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+}
+
+
+.capsule-brand {
+
+    font-size:
+        43px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -3px;
+
+}
+
+
+.capsule-brand strong {
+
+    color:
+        #1ed760;
+
+}
+
+
+.period {
+
+    text-align:
+        right;
+
+}
+
+
+.period small {
+
+    display:
+        block;
+
+    color:
+        #666;
+
+    font-size:
+        11px;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.period strong {
+
+    display:
+        block;
+
+    margin-top:
+        7px;
+
+    color:
+        #1ed760;
+
+    font-size:
+        13px;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+/* ================================= */
+/* INTRO */
+/* ================================= */
+
+.intro {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin-top:
+        65px;
+
+}
+
+
+.intro > span {
+
+    color:
+        #1ed760;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        3px;
+
+}
+
+
+.intro h1 {
+
+    margin-top:
+        12px;
+
+    font-size:
+        58px;
+
+    line-height:
+        1.02;
+
+    letter-spacing:
+        -3px;
+
+}
+
+
+/* ================================= */
+/* FEATURED */
+/* ================================= */
+
+.featured {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        42px;
+
+    margin-top:
+        50px;
+
+}
+
+
+.cover {
+
+    width:
+        300px;
+
+    height:
+        300px;
+
+    flex-shrink:
+        0;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        22px;
+
+    background:
+        #151a22;
+
+    box-shadow:
+        0 25px 60px
+        rgba(
+            0,
+            0,
+            0,
+            .55
+        );
+
+}
+
+
+.cover img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        block;
+
+    object-fit:
+        cover;
+
+}
+
+
+.featured-info {
+
+    min-width:
+        0;
+
+}
+
+
+.section-label {
+
+    display:
+        block;
+
+    color:
+        #70757d;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.featured-info h2 {
+
+    margin-top:
+        10px;
+
+    font-size:
+        42px;
+
+    line-height:
+        1.04;
+
+    letter-spacing:
+        -2px;
+
+    overflow-wrap:
+        anywhere;
+
+}
+
+
+.featured-info p {
+
+    margin-top:
+        8px;
+
+    color:
+        #999;
+
+    font-size:
+        20px;
+
+}
+
+
+.play-count {
+
+    display:
+        flex;
+
+    align-items:
+        baseline;
+
+    gap:
+        8px;
+
+    margin-top:
+        22px;
+
+}
+
+
+.play-count strong {
+
+    color:
+        #1ed760;
+
+    font-size:
+        30px;
+
+}
+
+
+.play-count span {
+
+    color:
+        #666;
+
+    font-size:
+        14px;
+
+}
+
+
+/* ================================= */
+/* STATS */
+/* ================================= */
+
+.stats {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        14px;
+
+    margin-top:
+        40px;
+
+}
+
+
+.stat {
+
+    padding:
+        20px 22px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .07
+        );
+
+    border-radius:
+        17px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .025
+        );
+
+}
+
+
+.stat strong {
+
+    display:
+        block;
+
+    font-size:
+        32px;
+
+}
+
+
+.stat span {
+
+    display:
+        block;
+
+    margin-top:
+        5px;
+
+    color:
+        #6f747b;
+
+    font-size:
+        13px;
+
+}
+
+
+/* ================================= */
+/* TOP ARTIST */
+/* ================================= */
+
+.top-artist {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    margin-top:
+        14px;
+
+    padding:
+        21px 24px;
+
+    border:
+        1px solid
+        rgba(
+            30,
+            215,
+            96,
+            .12
+        );
+
+    border-radius:
+        17px;
+
+    background:
+        rgba(
+            30,
+            215,
+            96,
+            .045
+        );
+
+}
+
+
+.top-artist h2 {
+
+    margin-top:
+        6px;
+
+    font-size:
+        25px;
+
+}
+
+
+.top-artist > strong {
+
+    color:
+        #1ed760;
+
+    font-size:
+        36px;
+
+}
+
+
+/* ================================= */
+/* RANKING */
+/* ================================= */
+
+.ranking {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin-top:
+        28px;
+
+}
+
+
+.ranking-title {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    margin-bottom:
+        4px;
+
+    color:
+        #62676e;
+
+    font-size:
+        10px;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.ranking-item {
+
+    min-height:
+        52px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    border-bottom:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .055
+        );
+
+}
+
+
+.rank {
+
+    width:
+        55px;
+
+    color:
+        #555;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+}
+
+
+.ranking-info {
+
+    flex:
+        1;
+
+    min-width:
+        0;
+
+}
+
+
+.ranking-info strong {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+
+    font-size:
+        15px;
+
+}
+
+
+.ranking-info span {
+
+    display:
+        block;
+
+    margin-top:
+        2px;
+
+    color:
+        #6f747b;
+
+    font-size:
+        11px;
+
+}
+
+
+.ranking-plays {
+
+    color:
+        #777;
+
+    font-size:
+        12px;
+
+}
+
+
+/* ================================= */
+/* FOOTER */
+/* ================================= */
+
+.capsule footer {
+
+    position:
+        absolute;
+
+    z-index:
+        2;
+
+    left:
+        70px;
+
+    right:
+        70px;
+
+    bottom:
+        38px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    color:
+        #50545a;
+
+    font-size:
+        10px;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.capsule footer strong {
+
+    color:
+        #1ed760;
+
+}
+
+
+/* ================================= */
+/* ACTIONS */
+/* ================================= */
+
+.actions {
+
+    display:
+        flex;
+
+    gap:
+        10px;
+
+    margin-top:
+        18px;
+
+}
+
+
+.actions button {
+
+    flex:
+        1;
+
+    border:
+        0;
+
+    border-radius:
+        999px;
+
+    padding:
+        14px 18px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+}
+
+
+.primary {
+
+    color:
+        #031006;
+
+    background:
+        #1ed760;
+
+}
+
+
+.secondary {
+
+    color:
+        white;
+
+    background:
+        #171d25;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .08
+        ) !important;
+
+}
+
+
+.message {
+
+    min-height:
+        18px;
+
+    margin-top:
+        9px;
+
+    color:
+        #777;
+
+    font-size:
+        12px;
+
+    text-align:
+        center;
+
+}
+
+
+@media (max-width: 600px) {
+
+    .setup h1 {
+
+        font-size:
+            42px;
+
+    }
+
+}
