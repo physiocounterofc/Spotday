@@ -1118,7 +1118,7 @@ if (capsuleButton) {
         () => {
 
             window.location.href =
-                "./capsula/";
+                "./capsule/";
 
         }
     );
