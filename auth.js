@@ -189,7 +189,7 @@ async function loginWithSpotify() {
             // Força a tela de autorização
 
             show_dialog:
-                "false",
+                "true",
 
             // PKCE
 
