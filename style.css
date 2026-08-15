@@ -810,3 +810,203 @@ h1 {
 
 }
 
+/* ================================= */
+/* CÁPSULA DO TEMPO */
+/* ================================= */
+
+.capsule-entry {
+
+    margin-top:
+        18px;
+
+}
+
+
+.capsule-button {
+
+    width:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        14px;
+
+    padding:
+        18px 20px;
+
+    border:
+        1px solid
+        rgba(
+            30,
+            215,
+            96,
+            .18
+        );
+
+    border-radius:
+        18px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(
+                30,
+                215,
+                96,
+                .10
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                .025
+            )
+        );
+
+    color:
+        white;
+
+    text-align:
+        left;
+
+    cursor:
+        pointer;
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+
+}
+
+
+.capsule-button:active {
+
+    transform:
+        scale(.98);
+
+}
+
+
+.capsule-button:hover {
+
+    border-color:
+        rgba(
+            30,
+            215,
+            96,
+            .4
+        );
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(
+                30,
+                215,
+                96,
+                .14
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                .035
+            )
+        );
+
+}
+
+
+.capsule-symbol {
+
+    width:
+        42px;
+
+    height:
+        42px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        14px;
+
+    background:
+        rgba(
+            30,
+            215,
+            96,
+            .12
+        );
+
+    color:
+        #1ed760;
+
+    font-size:
+        20px;
+
+}
+
+
+.capsule-text {
+
+    flex:
+        1;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        3px;
+
+}
+
+
+.capsule-text strong {
+
+    font-size:
+        15px;
+
+}
+
+
+.capsule-text small {
+
+    color:
+        #777d85;
+
+    font-size:
+        11px;
+
+}
+
+
+.capsule-arrow {
+
+    color:
+        #1ed760;
+
+    font-size:
+        20px;
+
+}
