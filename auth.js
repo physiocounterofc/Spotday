@@ -6,7 +6,8 @@ const REDIRECT_URI =
 
 const SCOPES = [
     "user-read-private",
-    "user-read-recently-played"
+    "user-read-recently-played",
+    "user-read-currently-playing"
 ].join(" ");
 
 /* ==============================
